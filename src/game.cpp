@@ -54,7 +54,8 @@ void Game::run(bool& close){
         }
         // case STATUS_MENU:
         // {
-            
+        //     Menu::DrawExitMenu();
+        //     break;
         // }
         case PLAY_GAME:
         {
@@ -70,7 +71,19 @@ void Game::run(bool& close){
             GameMap.MoveObjectX(TrafficLight);
             GameMap.Fill();
             character[characterIndex].Move();
+            character[characterIndex].Follow(GameMap);
             Menu::DrawPlayGame();
+            break;
+        }
+        case LOADING_PHASE:
+        {
+            LoadingSecond--;
+            Menu::DrawLoadingPhase();
+            break;
+        }
+        case LOSE_MENU:
+        {
+            Menu::DrawLoseMenu();
             break;
         }
         default:

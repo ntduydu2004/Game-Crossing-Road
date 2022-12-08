@@ -239,12 +239,10 @@ void Menu::DrawChooseCharacter(){
         else if (CheckCollisionPointRec(mousePosition, rec_ChooseCharacter[1])) characterIndex = 1, indexTouch = 2;
         else if (CheckCollisionPointRec(mousePosition, rec_ChooseCharacter[2])) characterIndex = 2, indexTouch = 3;
         else if (CheckCollisionPointRec(mousePosition, rec_ChooseCharacter[3])){
-            menu = PLAY_GAME;
+            LoadingSecond = 239;
+            menu = LOADING_PHASE;
             character[characterIndex].namePlayer = (string)name;
-            camera.offset = (Vector2){GetScreenWidth() / 2 - 45, GetScreenHeight() / 2 - 100};
-            camera.target = character[characterIndex].position;
-            camera.rotation = 0.0f;
-            camera.zoom = 1.0f;
+            isCollided = false;
         }
         else if (CheckCollisionPointRec(mousePosition, rec_ChooseCharacter[4])) menu = 6;
         else indexTouch = 0;
@@ -258,14 +256,14 @@ void Menu::DrawChooseCharacter(){
     DrawRectangle(rec_ChooseCharacter[3].x, rec_ChooseCharacter[3].y, rec_ChooseCharacter[3].width, rec_ChooseCharacter[3].height, BLUE);
     DrawRectangle(rec_ChooseCharacter[4].x, rec_ChooseCharacter[4].y, rec_ChooseCharacter[4].width, rec_ChooseCharacter[4].height, BLUE);
     if (1 <= indexMouse && indexMouse <= 3){
-        DrawRectangleLines(rec_ChooseCharacter[indexMouse - 1].x, rec_ChooseCharacter[indexMouse - 1].y, rec_ChooseCharacter[indexMouse - 1].width, rec_ChooseCharacter[indexMouse - 1].height, DARKBLUE);
+        DrawRectangle(rec_ChooseCharacter[indexMouse - 1].x, rec_ChooseCharacter[indexMouse - 1].y, rec_ChooseCharacter[indexMouse - 1].width, rec_ChooseCharacter[indexMouse - 1].height, Fade(DARKBLUE, 0.3f));
     }
     else if (indexMouse >= 4) {
         DrawRectangle(rec_ChooseCharacter[indexMouse - 1].x, rec_ChooseCharacter[indexMouse - 1].y, rec_ChooseCharacter[indexMouse - 1].width, rec_ChooseCharacter[indexMouse - 1].height, Fade(DARKBLUE, 0.3f));
         DrawRectangleLines(rec_ChooseCharacter[indexMouse - 1].x, rec_ChooseCharacter[indexMouse - 1].y, rec_ChooseCharacter[indexMouse - 1].width, rec_ChooseCharacter[indexMouse - 1].height, DARKBLUE);
     }
     if (indexTouch){
-        DrawRectangleLines(rec_ChooseCharacter[indexTouch - 1].x, rec_ChooseCharacter[indexTouch - 1].y, rec_ChooseCharacter[indexTouch - 1].width, rec_ChooseCharacter[indexTouch - 1].height, DARKBLUE);
+        DrawRectangle(rec_ChooseCharacter[indexTouch - 1].x, rec_ChooseCharacter[indexTouch - 1].y, rec_ChooseCharacter[indexTouch - 1].width, rec_ChooseCharacter[indexTouch - 1].height, DARKBLUE);
     }
     DrawText("CHOOSE YOUR CHARACTER", GetScreenWidth() / 2 - MeasureText("CHOOSE YOUR CHARACTER", 50) / 2, GetScreenHeight() / 2 - 230, 50, MAROON);
     DrawText(" PLAY ", GetScreenWidth() / 2 - 50, GetScreenHeight() / 2 + 150, 30, RAYWHITE);
@@ -275,26 +273,80 @@ void Menu::DrawChooseCharacter(){
     character[2].DrawChoose();
     EndDrawing();
 }
-void DrawLoadingPhase(){
-    
-}
-void DrawStatusMenu(){
-
-} // appear if you lose/ want to exit
 void Menu::DrawPlayGame(){
     character[characterIndex].ChangeState(framesCharacter, GameMap);
     // if (character[characterIndex].position.y > camera.target.y + GetScreenHeight() - camera.offset.y - 60) character[characterIndex].position.y = camera.target.y + GetScreenHeight() - camera.offset.y - 60;
-    if (IsKeyPressed(KEY_P)) menu = CHOOSE_CHARACTER;
+    if (IsKeyPressed(KEY_P)) menu = STATUS_MENU;
+    character[characterIndex].CheckCollisionObject(GameMap, isCollided);
+    if (isCollided){
+        menu = LOSE_MENU;
+    }
     BeginDrawing();
     ClearBackground(GetColor(0x052c46ff));
     GameMap.Draw(TrafficLight);
     character[characterIndex].DrawInGame();
     DrawRectangle(10, 10, 200, 50, BLACK);
     if (TrafficLight == LIGHT_GREEN)
-    DrawText(TextFormat("GRREN: %i", (TrafficLightSecond/60)), 20, 20, 30, GREEN);
+    DrawText(TextFormat("GREEN: %i", (TrafficLightSecond/60)), 20, 20, 30, GREEN);
     if (TrafficLight == LIGHT_RED)
     DrawText(TextFormat("RED: %i", (TrafficLightSecond/60)), 20, 20, 30, RED);
     if (TrafficLight == LIGHT_YELLOW)
     DrawText(TextFormat("YELLOW: %i", (TrafficLightSecond/60)), 20, 20, 30, YELLOW);
     EndDrawing();
+}
+void Menu::DrawLoadingPhase(){
+    BeginDrawing();
+    ClearBackground(GetColor(0x052c46ff));
+    GameMap.Draw(TrafficLight);
+    character[characterIndex].DrawInGame();
+    if (LoadingSecond == 0) menu = PLAY_GAME;
+    if (LoadingSecond >= 60){
+        DrawText(TextFormat("%i", LoadingSecond/60), GetScreenWidth()/2 - 100, GetScreenHeight()/2 - 200, 400, DARKBLUE);
+    }
+    else{
+        DrawText("START!!!", GetScreenWidth()/2 - MeasureText("START!!!", 200)/2, GetScreenHeight()/2 - 100, 200, DARKBLUE);
+    }
+    EndDrawing();
+}
+void Menu::DrawLoseMenu(){
+    if (CheckCollisionPointRec(mousePosition, rec_LoseMenu[0]))
+        {indexMouse = 1; SetMouseCursor(4);}
+    else if (CheckCollisionPointRec(mousePosition, rec_LoseMenu[1]))
+        {indexMouse = 2; SetMouseCursor(4);}    
+    else 
+        indexMouse = 0;
+    if (IsMouseButtonPressed(0)){
+        if (CheckCollisionPointRec(mousePosition, rec_LoseMenu[0])){
+            Restart();
+            menu = LOADING_PHASE;
+        }
+        if (CheckCollisionPointRec(mousePosition, rec_LoseMenu[1])){
+            Restart();
+            menu = MAIN_MENU;
+        }
+    }
+    BeginDrawing();
+    ClearBackground(GetColor(0x052c46ff));
+    GameMap.Draw(TrafficLight);
+    character[characterIndex].DrawInGame();
+    DrawRectangle(rec_LoseMenu[0].x, rec_LoseMenu[0].y, rec_LoseMenu[0].width, rec_LoseMenu[0].height, BLUE);
+    DrawRectangle(rec_LoseMenu[1].x, rec_LoseMenu[1].y, rec_LoseMenu[1].width, rec_LoseMenu[1].height, BLUE);
+    if (indexMouse) {
+        DrawRectangle(rec_LoseMenu[indexMouse - 1].x, rec_LoseMenu[indexMouse - 1].y, rec_LoseMenu[indexMouse - 1].width, rec_LoseMenu[indexMouse - 1].height, Fade(DARKBLUE, 0.3f));
+    }
+    DrawText("BETTER LUCK NEXT TIME^^", GetScreenWidth()/2 - MeasureText("BETTER LUCK NEXT TIME^^", 50)/2, GetScreenHeight()/2 - 25, 50, MAROON);
+    DrawText(" RESTART ", GetScreenWidth() / 2 - MeasureText(" RESTART ", 30) / 2, GetScreenHeight() / 2 + 150, 30, RAYWHITE);
+    DrawText(" BACK ", GetScreenWidth() / 2 - 50, GetScreenHeight() / 2 + 210, 30, RAYWHITE);
+    EndDrawing();
+}
+void Menu::Restart(){
+    GameMap.Restart();
+    LoadingSecond = 239;
+    character[characterIndex].position = (Vector2){GetScreenWidth()/2 - 32, GetScreenHeight() - 200};
+    character[characterIndex].moveside = character[characterIndex].movestate = 0;
+    isCollided = false;
+
+}
+void Menu::DrawExitMenu(){
+
 }

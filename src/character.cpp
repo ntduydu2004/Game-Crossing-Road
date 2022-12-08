@@ -5,7 +5,7 @@ Character::Character(string name, Vector2 PositionChoose){
     movestate = 0;
     this->name = name;
     this->PositionChoose = PositionChoose;
-    position = (Vector2){GetScreenWidth()/2 - 65, GetScreenHeight() - 100};
+    position = (Vector2){GetScreenWidth()/2 - 32, GetScreenHeight() - 200};
     string Filename = "../data/image/Character/" + name;
     moveState.assign(4, vector <Texture2D> (4));
     // add stand state
@@ -92,4 +92,14 @@ void Character::Move(){
     if (position.y > GetScreenHeight() - 60){
         position.y = GetScreenHeight() - 60;
     }
+}
+void Character::Follow(Map& GameMap){
+    GameMap.Follow(position);
+}
+void Character::CheckCollisionObject(Map& GameMap, bool& isCollided){
+    if (position.y >= GetScreenHeight() - 60){
+        isCollided = true;
+        return;
+    }
+    GameMap.CheckCollisionObject(position, isCollided);
 }

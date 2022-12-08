@@ -37,7 +37,9 @@ public:
     void Draw(LaneFactory& lanefactory, ObjectFactory& objectfactory, int TrafficLight);
     void Move(float p = 0.5f);
     void MoveObjectX(int TrafficLight);
+    void Follow(Vector2& position);
     bool isOutOfScreen();
     bool isLastInScreen();
     short GetHeight();
+    void CheckCollisionObject(ObjectFactory& objectFactory, Vector2& position, bool& isCollided);
 };

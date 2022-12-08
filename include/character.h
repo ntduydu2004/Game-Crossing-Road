@@ -14,9 +14,11 @@ public:
     Vector2 position;
     string namePlayer;
     Character(string name, Vector2 PositionChoose);
+    void Follow(Map& GameMap);
     ~Character();
     void Move();
     void DrawInGame();
     void DrawChoose();
     void ChangeState(short& frames, Map& GameMap);
+    void CheckCollisionObject(Map& GameMap, bool& isCollided);
 };

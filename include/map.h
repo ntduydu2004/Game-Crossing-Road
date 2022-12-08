@@ -14,4 +14,7 @@ public:
     void MoveObjectX(int TrafficLight);
     void Fill();
     void Draw(int TrafficLight);
+    void Follow(Vector2& position);
+    void CheckCollisionObject(Vector2& position, bool& isCollided);
+    void Restart();
 };

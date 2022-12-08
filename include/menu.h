@@ -17,6 +17,8 @@ typedef enum{
     CHOOSE_CHARACTER = 7,
     STATUS_MENU = 8,
     PLAY_GAME = 9,
+    LOADING_PHASE = 10,
+    LOSE_MENU = 11,
 }menuScreen;
 class Menu{
 protected:
@@ -28,7 +30,6 @@ protected:
         Character("Samira", (Vector2){GetScreenWidth() / 2 + 235, GetScreenHeight() / 2 - 125}),
     };
     Map GameMap;
-    Camera2D camera = { 0 };
     short menu = 0, id = 0, characterIndex = 0; 
     short frames = 0, framesCharacter = 0;
     bool close = false, clearScoreBoard = true, touch = false;
@@ -39,6 +40,8 @@ protected:
     int score = 0;
     short TrafficLightSecond = 0;
     short TrafficLight = 0;
+    short LoadingSecond = 239;
+    bool isCollided = false;
     Rectangle rec_Mode[5] =
     {
         {GetScreenWidth() / 2 - 150, GetScreenHeight() / 2 - 100, 300, 50},
@@ -74,16 +77,24 @@ protected:
         {GetScreenWidth() / 2 - 150, GetScreenHeight() / 2 + 140, 300, 50},
         {GetScreenWidth() / 2 - 150, GetScreenHeight() / 2 + 200, 300, 50},
     };
+    Rectangle rec_LoseMenu[2] =
+    {
+        {GetScreenWidth() / 2 - 150, GetScreenHeight() / 2 + 140, 300, 50},
+        {GetScreenWidth() / 2 - 150, GetScreenHeight() / 2 + 200, 300, 50},
+    };
+    // Rectangle rec_Exit[]
     
 public:
     ~Menu();
     void DrawMainMenu();
     void DrawLevelMenu();
-    void DrawStatusMenu(); // appear if you lose/ want to exit
+    void DrawExitMenu(); // appear if you lose/ want to exit
+    void DrawLoseMenu();
     void DrawScoreboard();
     void DrawEnterNamePhase();
     void DrawLoadingPhase(); 
     void DrawInstructions();
     void DrawChooseCharacter();
     void DrawPlayGame();
+    void Restart();
 };

@@ -50,7 +50,7 @@ MovingLane::MovingLane(Vector2 position, int type, short height){
         }
         else if (type == 2){
             typeName = GetRandomValue(0, 1);
-            y = position.y + 5;
+            y = position.y - 2;
         }
         else if (type == 3)
             typeName = GetRandomValue(0, 6);
@@ -88,5 +88,19 @@ bool MovingLane::isLastInScreen(){
 void MovingLane::MoveObjectX(int TrafficLight){
     for (int i = 0; i < numObject; i ++){
         object[i].MoveX(TrafficLight);
+    }
+}
+void MovingLane::Follow(Vector2& position){
+    if (type != 2) return;
+    for (int i = 0; i < numObject; i ++){
+        object[i].Follow(position);
+    }
+}
+void MovingLane::CheckCollisionObject(ObjectFactory& objectFactory, Vector2& position, bool& isCollided){
+    if (this->position.y < position.y + 60 && position.y + 60 < this->position.y + height){
+        for (int i = 0; i < numObject; i ++){
+            if (isCollided) return;
+            object[i].CheckCollisionObject(objectFactory, position, isCollided);
+        }
     }
 }

@@ -3,11 +3,13 @@ using namespace std;
 Map::Map(){
     x = -10;
     int type = GetRandomValue(0, 3);
+    if (type == 2) type = 3;
     short height = laneFactory.GetHeight(type);
     MovingLane x((Vector2){-10, GetScreenHeight() + 10}, type, height);
     lane.push_back(x);
     while (lane.back().isLastInScreen()){
         int type = GetRandomValue(0, 3);
+        if (type == 2) type = 3;
         short height = laneFactory.GetHeight(type);
         MovingLane x((Vector2){-10, lane.back().position.y - height}, type, height);
         lane.push_back(x);
@@ -37,5 +39,36 @@ void Map::Draw(int TrafficLight){
 void Map::MoveObjectX(int TrafficLight){
     for (int i = 0; i < lane.size(); i ++){
         lane[i].MoveObjectX(TrafficLight);
+    }
+}
+void Map::Follow(Vector2& position){
+    for (int i = 0; i < lane.size(); i++){
+        if (lane[i].position.y < position.y + 60 && lane[i].position.y + lane[i].GetHeight() > position.y + 60){
+            lane[i].Follow(position);
+            break;
+        }
+    }
+}
+void Map::CheckCollisionObject(Vector2& position, bool& isCollided){
+    if (isCollided) return;
+    for (int i = 0; i < lane.size(); i ++){
+        if (isCollided) return;
+        lane[i].CheckCollisionObject(objectFactory ,position, isCollided);
+    }
+}
+void Map::Restart(){
+    lane.clear();
+    x = -10;
+    int type = GetRandomValue(0, 3);
+    if (type == 2) type = 3;
+    short height = laneFactory.GetHeight(type);
+    MovingLane x((Vector2){-10, GetScreenHeight() + 10}, type, height);
+    lane.push_back(x);
+    while (lane.back().isLastInScreen()){
+        int type = GetRandomValue(0, 3);
+        if (type == 2) type = 3;
+        short height = laneFactory.GetHeight(type);
+        MovingLane x((Vector2){-10, lane.back().position.y - height}, type, height);
+        lane.push_back(x);
     }
 }
