@@ -52,13 +52,22 @@ MovingLane::MovingLane(Vector2 position, int type, short height){
             typeName = GetRandomValue(0, 1);
             y = position.y - 2;
         }
-        else if (type == 3)
+        else if (type == 3){
             typeName = GetRandomValue(0, 6);
+            if (typeName == 2){
+                if (isLeft) y = position.y - 70;
+                else y = position.y + height - 120;
+            }
+            if (typeName == 3){
+                if (isLeft) y = position.y - 90;
+                else y = position.y + height - 120;
+            }
+        }
         object.push_back(MovingObject((Vector2){x*1.0, y*1.0}, type, typeName, isLeft));
     }
     if (tmp == 1){
         numObject++;
-        object.push_back(MovingObject((Vector2){700, position.y - 80 + height}, 0, 10, true));
+        object.push_back(MovingObject((Vector2){700, position.y - 95 + height}, 0, 10, true));
     }
 }
 void MovingLane::Draw(LaneFactory& lanefactory, ObjectFactory& objectfactory, int TrafficLight){
@@ -85,22 +94,36 @@ bool MovingLane::isOutOfScreen(){
 bool MovingLane::isLastInScreen(){
     return position.y > -700;
 }
-void MovingLane::MoveObjectX(int TrafficLight){
+void MovingLane::MoveObjectX(int TrafficLight, float IncreaseSpeed){
     for (int i = 0; i < numObject; i ++){
-        object[i].MoveX(TrafficLight);
+        object[i].MoveX(TrafficLight,  IncreaseSpeed);
     }
 }
-void MovingLane::Follow(Vector2& position){
+void MovingLane::Follow(Vector2& position, float IncreaseSpeed){
     if (type != 2) return;
     for (int i = 0; i < numObject; i ++){
-        object[i].Follow(position);
+        object[i].Follow(position, IncreaseSpeed);
     }
 }
 void MovingLane::CheckCollisionObject(ObjectFactory& objectFactory, Vector2& position, bool& isCollided){
-    if (this->position.y < position.y + 60 && position.y + 60 < this->position.y + height){
+    if (this->position.y <= position.y + 55 && position.y + 55 <= this->position.y + height){
         for (int i = 0; i < numObject; i ++){
             if (isCollided) return;
             object[i].CheckCollisionObject(objectFactory, position, isCollided);
         }
+    }
+}
+void MovingLane::Load(ifstream& fin){
+    fin >> type >> height >> numObject >> position.x >> position.y;
+    object.clear();
+    object.resize(numObject);
+    for (int i = 0; i < numObject; i ++){
+        object[i].Load(fin);
+    }
+}
+void MovingLane::Save(ofstream& fout){
+    fout << type << " " << height << " " << numObject << " " << position.x << " " << position.y << '\n';
+    for (int i = 0; i < numObject; i ++){
+        object[i].Save(fout);
     }
 }

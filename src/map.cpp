@@ -1,6 +1,7 @@
 #include "map.h"
 using namespace std;
 Map::Map(){
+    lane.clear();
     x = -10;
     int type = GetRandomValue(0, 3);
     if (type == 2) type = 3;
@@ -32,25 +33,24 @@ void Map::Fill(){
     }
 }
 void Map::Draw(int TrafficLight){
-    for (int i = 0; i < lane.size(); i ++){
+    for (int i = (int)lane.size() - 1; i >= 0; i --){
         lane[i].Draw(laneFactory, objectFactory, TrafficLight);
     }
 }
-void Map::MoveObjectX(int TrafficLight){
+void Map::MoveObjectX(int TrafficLight, float IncreaseSpeed){
     for (int i = 0; i < lane.size(); i ++){
-        lane[i].MoveObjectX(TrafficLight);
+        lane[i].MoveObjectX(TrafficLight, IncreaseSpeed);
     }
 }
-void Map::Follow(Vector2& position){
+void Map::Follow(Vector2& position, float IncreaseSpeed){
     for (int i = 0; i < lane.size(); i++){
         if (lane[i].position.y < position.y + 60 && lane[i].position.y + lane[i].GetHeight() > position.y + 60){
-            lane[i].Follow(position);
+            lane[i].Follow(position, IncreaseSpeed);
             break;
         }
     }
 }
 void Map::CheckCollisionObject(Vector2& position, bool& isCollided){
-    if (isCollided) return;
     for (int i = 0; i < lane.size(); i ++){
         if (isCollided) return;
         lane[i].CheckCollisionObject(objectFactory ,position, isCollided);
@@ -70,5 +70,20 @@ void Map::Restart(){
         short height = laneFactory.GetHeight(type);
         MovingLane x((Vector2){-10, lane.back().position.y - height}, type, height);
         lane.push_back(x);
+    }
+}
+void Map::Load(ifstream& fin){
+    lane.clear();
+    int numLane;
+    fin >> numLane;
+    lane.resize(numLane);
+    for (int i = 0; i < numLane; i ++){
+        lane[i].Load(fin);
+    }
+}
+void Map::Save(ofstream& fout){
+    fout << lane.size() << '\n';
+    for (int i = 0; i < lane.size(); i ++){
+        lane[i].Save(fout);
     }
 }

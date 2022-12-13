@@ -13,4 +13,6 @@ public:
     Game(){};
     ~Game(){};
     void run(bool& close);
+    void SaveScore();
+    void LoadScore();
 };

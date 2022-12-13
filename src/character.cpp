@@ -93,8 +93,8 @@ void Character::Move(){
         position.y = GetScreenHeight() - 60;
     }
 }
-void Character::Follow(Map& GameMap){
-    GameMap.Follow(position);
+void Character::Follow(Map& GameMap, int IncreaseSpeed){
+    GameMap.Follow(position, IncreaseSpeed);
 }
 void Character::CheckCollisionObject(Map& GameMap, bool& isCollided){
     if (position.y >= GetScreenHeight() - 60){
@@ -102,4 +102,13 @@ void Character::CheckCollisionObject(Map& GameMap, bool& isCollided){
         return;
     }
     GameMap.CheckCollisionObject(position, isCollided);
+}
+void Character::Load(ifstream& fin){
+    fin >> position.x >> position.y;
+    fin.ignore();
+    getline(fin, namePlayer);
+}
+void Character::Save(ofstream& fout){
+    fout << position.x << " " << position.y << '\n';
+    fout << namePlayer << '\n';
 }

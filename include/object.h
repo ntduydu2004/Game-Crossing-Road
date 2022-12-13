@@ -53,7 +53,7 @@ private:
             Object("buffalo", 116, 70),
             Object("deer", 66, 80),
             Object("elephant", 142, 90),
-            Object("girrafe", 102, 110),
+            Object("giraffe", 102, 110),
             Object("leopard", 88, 60),
             Object("lion", 80, 60),
             Object("rhino", 128, 70),
@@ -72,14 +72,16 @@ private:
     bool isLeft;
 public:
     Vector2 position;
-    // MovingObject(){};
+    MovingObject(){};
     MovingObject(Vector2 position, int typeLane, int type, bool isLeft);
     short GetHeight(ObjectFactory& objectFactory);
     short GetWidth(ObjectFactory& objectFactory);
     // void Set(Vector2, int typeLane, int type, bool isLeft);
     void Draw(ObjectFactory& objectFactory, int TrafficLight);
     void Move(float p = 0.5f);
-    void MoveX(int TrafficLight);
-    void Follow(Vector2& position);
+    void MoveX(int TrafficLight,  float IncreaseSpeed);
+    void Follow(Vector2& position, float IncreaseSpeed);
     void CheckCollisionObject(ObjectFactory& objectfactory, Vector2& position, bool& isCollided);
+    void Load(ifstream& fin);
+    void Save(ofstream& fout);
 };

@@ -15,7 +15,7 @@ class LaneFactory{
 private:
     Lane lane[4] =
     {
-        Lane("Road", 260),
+        Lane("Road", 270),
         Lane("Pavement", 135),
         Lane("Stream", 135),
         Lane("Grass", 135),
@@ -34,12 +34,15 @@ private:
 public:
     Vector2 position;
     MovingLane(Vector2 position, int type, short height);
+    MovingLane(){};
     void Draw(LaneFactory& lanefactory, ObjectFactory& objectfactory, int TrafficLight);
     void Move(float p = 0.5f);
-    void MoveObjectX(int TrafficLight);
-    void Follow(Vector2& position);
+    void MoveObjectX(int TrafficLight, float IncreaseSpeed);
+    void Follow(Vector2& position, float IncreaseSpeed);
     bool isOutOfScreen();
     bool isLastInScreen();
     short GetHeight();
     void CheckCollisionObject(ObjectFactory& objectFactory, Vector2& position, bool& isCollided);
+    void Load(ifstream& fin);
+    void Save(ofstream& fout);
 };

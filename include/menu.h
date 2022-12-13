@@ -19,6 +19,8 @@ typedef enum{
     PLAY_GAME = 9,
     LOADING_PHASE = 10,
     LOSE_MENU = 11,
+    LOAD_GAME_PLAY = 12,
+    SAVE_GAME = 13,
 }menuScreen;
 class Menu{
 protected:
@@ -32,16 +34,24 @@ protected:
     Map GameMap;
     short menu = 0, id = 0, characterIndex = 0; 
     short frames = 0, framesCharacter = 0;
-    bool close = false, clearScoreBoard = true, touch = false;
+    float acceleration = 0;
+    bool touch = false, CanLoad = true, CanSave = true;
     Vector2 mousePosition;
     Vector2 touchPosition;
     char name[30] = "\0";
+    string FilePath;
     short indexMouse = -1, indexTouch = -1, choose, level = 0;
     int score = 0;
     short TrafficLightSecond = 0;
     short TrafficLight = 0;
     short LoadingSecond = 239;
     bool isCollided = false;
+    int record = 0;
+    vector <int> ScoreList;
+    vector <string> UserScoreList;
+    vector <int> ScoreLevel;
+    int numScore = 0;
+
     Rectangle rec_Mode[5] =
     {
         {GetScreenWidth() / 2 - 150, GetScreenHeight() / 2 - 100, 300, 50},
@@ -82,10 +92,38 @@ protected:
         {GetScreenWidth() / 2 - 150, GetScreenHeight() / 2 + 140, 300, 50},
         {GetScreenWidth() / 2 - 150, GetScreenHeight() / 2 + 200, 300, 50},
     };
-    // Rectangle rec_Exit[]
-    
+    Rectangle rec_Exit[4] =
+    {
+        {GetScreenWidth() / 2 - 150, GetScreenHeight() / 2 - 100, 300, 50},
+        {GetScreenWidth() / 2 - 150, GetScreenHeight() / 2 - 40, 300, 50},
+        {GetScreenWidth() / 2 - 150, GetScreenHeight() / 2 + 20, 300, 50},
+        {GetScreenWidth() / 2 - 150, GetScreenHeight() / 2 + 80, 300, 50},
+    };
+    Rectangle rec_SaveGame[4] = 
+    {
+        {GetScreenWidth() / 2 - 400, GetScreenHeight() / 2 - 25, 800, 50},
+        {GetScreenWidth() / 2 - 150, GetScreenHeight() / 2 + 140, 300, 50},
+        {GetScreenWidth() / 2 - 150, GetScreenHeight() / 2 + 200, 300, 50},
+        {GetScreenWidth() / 2 - 150, GetScreenHeight() / 2 + 260, 300, 50},
+    };
+    Rectangle rec_LoadGame[3] = 
+    {
+        {GetScreenWidth() / 2 - 400, GetScreenHeight() / 2 - 25, 800, 50},
+        {GetScreenWidth() / 2 - 150, GetScreenHeight() / 2 + 140, 300, 50},
+        {GetScreenWidth() / 2 - 150, GetScreenHeight() / 2 + 200, 300, 50},
+    };
+    Rectangle rec_LoadGameWhilePlay[4] =
+    {
+        {GetScreenWidth() / 2 - 400, GetScreenHeight() / 2 - 25, 800, 50},
+        {GetScreenWidth() / 2 - 150, GetScreenHeight() / 2 + 140, 300, 50},
+        {GetScreenWidth() / 2 - 150, GetScreenHeight() / 2 + 200, 300, 50},
+        {GetScreenWidth() / 2 - 150, GetScreenHeight() / 2 + 260, 300, 50},
+    };
 public:
     ~Menu();
+    void DrawLoadGame();
+    void DrawLoadGameWhilePlay();
+    void DrawSaveGame();
     void DrawMainMenu();
     void DrawLevelMenu();
     void DrawExitMenu(); // appear if you lose/ want to exit
@@ -97,4 +135,6 @@ public:
     void DrawChooseCharacter();
     void DrawPlayGame();
     void Restart();
+    void LoadGame();
+    void SaveGame();
 };
