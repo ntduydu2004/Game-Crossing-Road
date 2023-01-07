@@ -6,13 +6,14 @@ Map::Map(){
     int type = GetRandomValue(0, 3);
     if (type == 2) type = 3;
     short height = laneFactory.GetHeight(type);
-    MovingLane x((Vector2){-10, GetScreenHeight() + 10}, type, height);
+    MovingLane x((Vector2){-10, GetScreenHeight() + 10}, type, height, 0);
     lane.push_back(x);
     while (lane.back().isLastInScreen()){
         int type = GetRandomValue(0, 3);
         if (type == 2) type = 3;
         short height = laneFactory.GetHeight(type);
-        MovingLane x((Vector2){-10, lane.back().position.y - height}, type, height);
+        prevType = type;
+        MovingLane x((Vector2){-10, lane.back().position.y - height}, type, height, 0);
         lane.push_back(x);
     }
 }
@@ -27,9 +28,16 @@ void Map::Fill(){
     }
     if (lane.back().isLastInScreen()){
         int type = GetRandomValue(0, 3);
+        int ChangeDirect = 0;
+        if (type == prevType && type == 2){
+            bool isLeft = lane.back().GetDirection();
+            if (isLeft == 0) ChangeDirect = 1;
+            else ChangeDirect = -1;
+        }
         short height = laneFactory.GetHeight(type);
-        MovingLane x1((Vector2){x, lane.back().position.y - height}, type, height);
+        MovingLane x1((Vector2){x, lane.back().position.y - height}, type, height, ChangeDirect);
         lane.push_back(x1);
+        prevType = type;
     }
 }
 void Map::Draw(int TrafficLight){
@@ -62,14 +70,15 @@ void Map::Restart(){
     int type = GetRandomValue(0, 3);
     if (type == 2) type = 3;
     short height = laneFactory.GetHeight(type);
-    MovingLane x((Vector2){-10, GetScreenHeight() + 10}, type, height);
+    MovingLane x((Vector2){-10, GetScreenHeight() + 10}, type, height, 0);
     lane.push_back(x);
     while (lane.back().isLastInScreen()){
         int type = GetRandomValue(0, 3);
         if (type == 2) type = 3;
         short height = laneFactory.GetHeight(type);
-        MovingLane x((Vector2){-10, lane.back().position.y - height}, type, height);
+        MovingLane x((Vector2){-10, lane.back().position.y - height}, type, height, 0);
         lane.push_back(x);
+        prevType = type;
     }
 }
 void Map::Load(ifstream& fin){

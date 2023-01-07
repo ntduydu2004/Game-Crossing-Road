@@ -6,6 +6,7 @@ private:
     LaneFactory laneFactory;
     ObjectFactory objectFactory;
     vector <MovingLane> lane;
+    int prevType;
 public:
     short x;
     Map();

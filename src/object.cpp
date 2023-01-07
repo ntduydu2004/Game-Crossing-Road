@@ -111,3 +111,6 @@ void MovingObject::Load(ifstream& fin){
 void MovingObject::Save(ofstream& fout){
     fout << typeLane << " " << type << " " << isLeft << " " << position.x << " " << position.y << '\n';
 }
+bool MovingObject::GetDirection(){
+    return isLeft;
+}

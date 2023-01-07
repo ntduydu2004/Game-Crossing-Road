@@ -20,7 +20,7 @@ void Lane::Draw(Vector2 position){
 short Lane::GetHeight(){
     return height;
 }
-MovingLane::MovingLane(Vector2 position, int type, short height){
+MovingLane::MovingLane(Vector2 position, int type, short height, int ChangeDirect){
     this->type = type;
     this->position = position;
     this->height = height;
@@ -35,6 +35,7 @@ MovingLane::MovingLane(Vector2 position, int type, short height){
     object.clear();
     for (int i = 0; i < numObject; i ++){
         bool isLeft = GetRandomValue(0, 1);
+        if (ChangeDirect != 0) isLeft = max(0, ChangeDirect);
         int x, y;
         if (isLeft){
             x = GetRandomValue(GetScreenWidth() + 950 - i*250, GetScreenWidth() + 1000 - i*250);
@@ -126,4 +127,7 @@ void MovingLane::Save(ofstream& fout){
     for (int i = 0; i < numObject; i ++){
         object[i].Save(fout);
     }
+}
+bool MovingLane::GetDirection(){
+    return object[0].GetDirection();
 }

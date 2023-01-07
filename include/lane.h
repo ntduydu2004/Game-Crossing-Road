@@ -33,7 +33,7 @@ private:
     int type;
 public:
     Vector2 position;
-    MovingLane(Vector2 position, int type, short height);
+    MovingLane(Vector2 position, int type, short height, int ChangeDirect);
     MovingLane(){};
     void Draw(LaneFactory& lanefactory, ObjectFactory& objectfactory, int TrafficLight);
     void Move(float p = 0.5f);
@@ -45,4 +45,5 @@ public:
     void CheckCollisionObject(ObjectFactory& objectFactory, Vector2& position, bool& isCollided);
     void Load(ifstream& fin);
     void Save(ofstream& fout);
+    bool GetDirection();
 };
